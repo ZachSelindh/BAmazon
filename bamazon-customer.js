@@ -47,7 +47,7 @@ function populateItems() {
       console.log("Department: ".yellow + data[i].department.green);
       console.log("Price: ".yellow + colors.green(data[i].price));
       console.log("Stock: ".yellow + colors.green(data[i].stock));
-      console.log("----------".red);
+      console.log("----------".white);
     }
     getChoices();
   });
