@@ -1,4 +1,4 @@
-/* Node.js file for BAmazon app for UTA Boot Camp
+/* Node.js file for BAmazon app - customer side for UTA Boot Camp
 by Zach Selindh */
 
 var inquirer = require("inquirer");
@@ -72,19 +72,30 @@ function getChoices() {
 
 function buyItems(choice, quantity) {
   conn.query("SELECT * FROM store", function(err, data) {
-    sel = choice - 1;
     if (err) throw err;
-    if (sel > data.length) {
+    if (choice > data.length) {
       console.log("That item does not exist.");
       getChoices();
+      return;
     }
-    if (quantity > data[sel].stock) {
+    if (quantity > data[choice - 1].stock) {
       console.log("We don't have that many in stock.");
       getChoices();
     } else {
-      let newStock = data[sel].stock - quantity;
-      conn.query("SELECT ? FROM store" )
-    }
-
+      var newStock = data[choice - 1].stock - quantity;
+      conn.query("UPDATE store SET ? WHERE ?", [
+        {
+          stock: newStock
+        },
+        {
+          id: choice
+        }
+      ], function(err, data) {
+        if (err) throw err;
+        console.log("Thank you for purchasing!");
+        console.log("-------------");
+        initMarket();
+      });
+    };
   });
 };
