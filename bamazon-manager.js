@@ -68,7 +68,7 @@ function viewStore() {
 };
 
 function viewLow() {
-    conn.query("SELECT * FROM store WHERE STOCK < 10", function(err, data) {
+    conn.query("SELECT * FROM store WHERE STOCK <= 10", function(err, data) {
         if (err) throw err;
         for (i=0; i < data.length; i++) {
           console.log("ID: ".yellow + colors.green(data[i].id));
@@ -83,9 +83,77 @@ function viewLow() {
 };
 
 function replenish() {
-
+    conn.query("SELECT * FROM store", function(err, data) {
+        if (err) throw err;
+        for (i=0; i < data.length; i++) {
+          console.log("ID: ".yellow + colors.green(data[i].id));
+          console.log("Product: ".yellow + data[i].product_name.green);
+          console.log("Stock: ".yellow + colors.green(data[i].stock));
+          console.log("----------".white);
+        }
+        inquirer
+    .prompt([
+      {
+        message: "Please type the ID of the item you'd like to replenish.",
+        name: "choice"
+      },
+      {
+        message: "How many would you like to add to stock?",
+        name: "quantity"
+      }
+    ]).then(function(answer) {
+        var chosen = answer.choice;
+        var stockRep = answer.quantity;
+        var stockCur = data[chosen - 1].stock;
+        var newStock = parseInt(stockCur) + parseInt(stockRep);
+        conn.query("UPDATE store SET ? WHERE ?", [
+            {
+                stock: newStock
+            },
+            {
+                id: chosen
+            }
+        ], function(err, data) {
+            if (err) throw err;
+            console.log("Stock replenished!");
+            console.log(data)
+            console.log("----------".white);
+            showStore();
+        });
+    });
+});
 };
 
 function addNew() {
+    inquirer
+    .prompt([
+        {
+            message: "Enter the name of the new product:",
+            name: "product"
+        },
+        {
+            message: "Choose the department:",
+            name: "department",
+            type: "list",
+            choices: ["Electronics", "Games", "Consoles"]
+        },
+        {
+            message: "Enter the item's price:",
+            name: "price"
+        },
+        {
+            message: "How many would you like to add?",
+            name: "stock"
+        }
+    ]).then(function(answer) {
+        conn.query("INSERT INTO store (product_name, department, price, stock) VALUES (?, ?, ?, ?)", [
+            answer.product, answer.department, answer.price, answer.stock
+        ], function(err, data) {
+            if (err) throw err;
+            console.log("Item successfully added!")
+            console.log("----------".white);
+            showStore();
+        })
 
+    })
 };

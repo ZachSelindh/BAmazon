@@ -18,7 +18,7 @@ VALUES ("Television", "Electronics", 300, 10),
  ("Super Mario", "Games", 60, 25),
  ("Pokemon Let's Go", "Games", 65, 20),
  ("Dark Souls 3", "Games", 35, 10),
- ("Halo: Combat Evolved", "Games", 10, 30),
+ ("Devil May Cry 5", "Games", 100, 30),
  ("Civilization 5", "Games", 45, 20),
  ("Halo: Combat Evolved", "Games", 10, 30)
  ;
