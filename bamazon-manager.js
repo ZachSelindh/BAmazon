@@ -116,7 +116,6 @@ function replenish() {
         ], function(err, data) {
             if (err) throw err;
             console.log("Stock replenished!");
-            console.log(data)
             console.log("----------".white);
             showStore();
         });
